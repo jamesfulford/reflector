@@ -84,6 +84,7 @@ public class partition {
         
         
                     //      EDITING METHODS
+        
 	public void paint(){
 		if(this.validity()){
 			master.fill(masterSymbol);
@@ -171,5 +172,23 @@ public class partition {
         
         
         //need a load-into method to take memory and put it into a slave.
+        
+        
+        
+        
+        
+//        private class allocation {
+//            Cursor start;
+//            Cursor end;
+//            language hashMap;
+//            
+//            public allocation 
+//        }
+        
+        
+        
+        
+        
+        
         
 }//end partition class

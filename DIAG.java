@@ -80,6 +80,17 @@ public class DIAG {
 		for(int i = 0; i<chararray.length; i++)
 			System.out.print(chararray[i] + ",  ");
 	}
+        
+        public static void val(int[] intarray){
+		System.out.println("is:");
+		for(int i = 0; i<intarray.length; i++)
+			System.out.print(intarray[i] + ",  ");
+	}        
+        public static void val(int[] intarray, String name){
+		System.out.println(name + " is:");
+		for(int i = 0; i<intarray.length; i++)
+			System.out.print(intarray[i] + ",  ");
+	}
 	
 	public static void val(char[][] chartable, String name){
 		System.out.println(name + " is:");
