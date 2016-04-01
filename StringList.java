@@ -15,6 +15,11 @@ public class StringList{
         top = 0;
     }
     
+    public StringList(String[] s){
+        map  = s;
+        top = s.length;
+    }
+    
     public static StringList init(int size){
         StringList temp = new StringList(size);
         return temp;

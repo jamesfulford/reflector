@@ -27,15 +27,13 @@ public class language {
     // constructs a language from a file.
     
     public language(String[] s){
-        words.map = s;
+        words = new StringList(s);
     }
     // constructs a language from a given array of Strings.
     
      public void print(){
         System.out.println();
-        for (String word : words.map) {
-            System.out.println(word);
-        }
+        words.print();
     }
     // prints all words.
     
@@ -44,7 +42,7 @@ public class language {
                 //      HASHMAPPING
     
     public language hashMap(){
-        language hashMap = new language( this.words.toArray() );
+        language hashMap = new language( words.toArray() );
         hashMap.uniqueize();
         //hashMap.sort();
         return hashMap;

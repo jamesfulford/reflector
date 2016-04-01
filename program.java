@@ -33,12 +33,18 @@ public class program {
         language greenEggsAndHam = new language ( extractionPoint );
         
         
+        
+        
                     //      HASHMAP CREATION
         
         language hashbrownAndEggs = greenEggsAndHam.hashMap();
+        
            
         
-        
+        System.out.println("Story Words: " + greenEggsAndHam.words.toArray().length);
+        System.out.println("Hashmap Words: " + hashbrownAndEggs.words.toArray().length);
+        greenEggsAndHam.print();
+        hashbrownAndEggs.print();
         
        
         
