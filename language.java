@@ -1,137 +1,113 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /**
- *
+ * Mapping between integers and words. (This is a hash map)
  * @author James
  */
 public class language {
-    StringList words; //a language is composed of words.
+    StringList words;
     
-
-//will make a sorting and unique identifying method. Eventually.
     
-                //      LANGUAGE INITIATION
     
-                //      LANGUAGE EDITING AND EXPANSION
+                //      INITIATION
     
-                //      STRING LIST TO LANGUAGE
-                        //UNIQUE selections from String List
-                        //Sort a String List
-    
-                //      STRING LISTS
-    
-    private class StringList{
-    String[] map = null;
-    int top = 0; //points to the next available spot.
-    //this is implemented as an array based list.
-    
-    public StringList init(int size){
-        StringList temp = new StringList();
-        temp.map = new String[size];
-        temp.top = 0;
-        return temp;
-    }
-    
-    public int giveLocation(String s){
-        for(int i=0; i<top; i++){
-            if(map[i].equals(s))
-                return i;
+    public language(File extractionPoint) throws FileNotFoundException{
+        Scanner type = new Scanner ( extractionPoint );
+        String s = "";
+        while(type.hasNextLine()){
+            s = s + String.valueOf( (char) 182 ) + type.nextLine();
         }
-        add(s);
-        return top;
+        StringList temp = listAllWords(s);
+        words = temp;
+        type.close();
     }
-     //returns int value of s' location. Adds location if need be.
+    // constructs a language from a file.
     
-    public String lookUpGiveString(int v){
-        return map[v];
+    public language(String[] s){
+        words.map = s;
     }
+    // constructs a language from a given array of Strings.
     
-    private void grow(StringList l){ //doubles the size of the String array "map".
-        StringList temp = init(2*l.map.length);
-        for(int i=0; i<l.map.length; i++)
-            temp.map[i] = l.map[i];
-        l = temp;      
-    }
-    
-    public void add(String s){ //adds string s to the list. Grows if need be.
-        if(top >= map.length){
-            grow(this);
+     public void print(){
+        System.out.println();
+        for (String word : words.map) {
+            System.out.println(word);
         }
-        map[top] = s;
-        top++;
     }
+    // prints all words.
     
-    }
-     //handles a list of strings. 
-    private StringList initStringList(int size){
-        StringList temp = new StringList();
-        temp.map = new String[size];
-        temp.top = 0;
-        return temp;
+     
+     
+                //      HASHMAPPING
+    
+    public language hashMap(){
+        language hashMap = new language( this.words.toArray() );
+        hashMap.uniqueize();
+        //hashMap.sort();
+        return hashMap;
     } 
-    //create a StringList of size capacity
-    
-    
-                //      CHAR STACKS
-   
-    private class CharStack{
-        char[] stack = new char[40];
-        int top = 0; //points to next available position
+    //takes language and returns a hashmapping language with it.
+     
+     
+    public void uniqueize(){
+        StringList uniques = new StringList(1000);
         
-        public CharStack init(){
-            return new CharStack();
+        for(int i = 0; i < words.top; i++){ //go through all the words
+            boolean addToList = true;
+            for(int k = 0; k < uniques.top; k++){ //check for same
+                
+                if( words.map[i].equalsIgnoreCase( uniques.map[k] ) ){
+                    addToList=false;
+                    break;
+                }
+            }
+            if(addToList) uniques.add(words.map[i]);
         }
         
-        public void push(char a){
-            if(top>=stack.length){
-              System.out.println("Stack overflow! Did not push character " + a);  
-            } else {
-            stack[top] = a;
-            top++;
-            }
-        } //if there is room in the stack, adds character onto the stack.
-        
-        public char pop(){
-            if(top > 0){
-                    return stack[--top];
-            } else {
-                    return (char) 0;
-            }
-        } //if there is something, returns highest character in stack. Else, returns (char) 0 (null).
-        
-        public String flush(){
-            String result = "";
-            boolean notNull = true;
-            while(top > 0)
-                result = pop() + result; //tack on the stack entries to the front. Puts things in the right order.
-            return result;     
-        } //returns and empties the entire stack. Puts the characters in the inverse order, top being last.
-        
-        public void funnel(String word){
-            if(word.length() == 0){
-                //do nothing. This is here for logical inversion.
-            } else {
-                char[] arrayWord = word.toCharArray();
-                for(int i = 0; i < arrayWord.length; i++)
-                    push(arrayWord[i]);  
-            }
-        } //pushes the entire string into the stak. Does nothing if the string has no length.
-        
+        words = uniques;
     }
+    // makes language's list of Strings have no duplicates.
     
-    public CharStack initCharStack(){
-        return new CharStack();
+    public String hash(int v){
+        return words.lookUp(v);
+    }
+    // converts from int to String
+    public String[] hash(int[] v){
+        String[] temp = new String[v.length];
+        for(int i = 0; i < v.length; i++)
+            temp[i] = hash( v[i] );
+        return temp;
+    }
+    // converts int[] to String[]
+    
+    public int hash(String s){
+        return words.find(s);
+    }
+    // converts from String to int
+    public int[] hash(String[] v){
+        int[] temp = new int[v.length];
+        for(int i = 0; i < v.length; i++)
+            temp[i] = hash( v[i] );
+        return temp;
+    }
+    // converts String[] to int[]
+    public int[] hash(StringList sl){
+        return hash( sl.toArray() );
     }
     
     
-                //      PARSING METHODS
+                //      PARSING
     
-    
-    private StringList discriminate(String s){
-        StringList words = initStringList(100);
+    public StringList listAllWords(String s){
+        StringList words = StringList.init(10000);
         
         char[] array = s.toCharArray();
         int d = 0;
         
-        CharStack workStack = initCharStack();
+        CharStack workStack = CharStack.init();
         
         while(d < array.length){
             if(endOfWord(array[d])){
@@ -140,21 +116,10 @@ public class language {
             
             workStack.push(cast(array[d]));
             d++;
-        }
+            }
         return words;
     }
-    //returns a StringList of every word in the given String.
-    
-    private char cast(char a){
-       int v = (int) a;
-       if( v == 13 ) return (char) 182;
-       if( v < 32 ) return (char) 172;
-       if( v == 32) return '_';
-       if( v > 32 && v <=126 ) return a;
-       
-       return (char) 175;
-    }
-    //makes the invisible characters visible.
+    //parses a string, returns StringList of all words (not unique).
     
     private boolean endOfWord(char a){
         if((int) a < 127 && (int) a > 32){
@@ -164,7 +129,16 @@ public class language {
         }
         return true;  
     }
-    
-    
-    
+    //returns true if the character indicates the end of a word.
+
+    private char cast(char a){
+       int v = (int) a;
+       if( v == 13 ) return (char) 182;
+       if( v <= 32 ) return (char) '_';
+//       if( v == 32) return '_';
+       if( v > 32 && v <=126 ) return a;
+       
+       return '_';
+    }
+    //returns a more visible character for invisible characters. Otherwise returns input.
 }
