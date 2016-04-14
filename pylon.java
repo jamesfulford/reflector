@@ -1,10 +1,12 @@
+//James Fulford
+//Memory area
 
 public class pylon {
 	int size;
 	deflector[] buffer;
         int rearGuard = 0;
 	int vanguard = 0; //points to the most recent deflector.
-        language toRule = null;
+        AllocationList philes;
 	
         
                 //      INITIALIZAITON
@@ -17,7 +19,7 @@ public class pylon {
 	}
 	//Constructs a pylon with size size
 	
-        public void blanketStatement(deflector base){
+        public void fillAllWithSimilar(deflector base){
             for(int i = 0; i<size; i++){
                 this.buffer[i] = base.copy();
             }
@@ -40,6 +42,14 @@ public class pylon {
             for(int i=rearGuard; i!=vanguard; i=(i+1)%size)
                 if(i==v) return true;
             return false;
+        }
+        
+        
+        
+                //      CURSOR MANAGEMENT
+        
+        private deflector whichLevel(Cursor spot){
+            return buffer[ spot.level ];
         }
         
         
@@ -89,7 +99,7 @@ public class pylon {
 
         
         
-                        //      SEARCHING METHODS
+                //      SEARCHING METHODS
         
         public Cursor[] sequentialSearch(char a){
             Cursor[] results = new Cursor[size];
@@ -112,6 +122,98 @@ public class pylon {
 	
         
         
+                //      MEMORY ALLOCATION
+        
+        public boolean add(String content){
+            Allocation region = philes.whereToAdd(content);
+            if(region == null) return false;
+            Cursor typist = region.start.copy();
+            
+            StringList contentWords = null;
+            contentWords = contentWords.listAllWords(content); //content is parsed.
+            
+            for(String word : contentWords.toArray()){
+                typist.write( (char) region.hashmap.findPutIn(word) ); //possible lossy conversion from int to char... :(
+            }
+             return true;
+        }
+        
+        private class Allocation{
+            String name;
+            Cursor start;
+            Cursor end;
+            StringList hashmap;
+            pylon home;
+            
+            public boolean beats(Allocation latter){
+                return (this.end).beats(latter.start);
+            }
+            
+            public Allocation(Cursor starter, String content){
+                name = content.substring(0, 40);
+                this.home = starter.home;
+                
+                start = starter.copy();
+                if( start.atTopLeft() ) 
+                    start.next(); //if starter is in the top left spot, move along one spot.
+                
+                hashmap = (StringList) hashmap.listAllWords(content).uniqueize(); //make the hashmap from the content
+            }
+        }
+        
+        private class AllocationList extends AList {
+            @Override
+            AList createNew() {
+                return new AllocationList();
+            }
+
+            @Override
+            boolean beats(Object a, Object b) {
+                return ((Allocation) a).beats((Allocation) b);
+            }
+
+            @Override
+            void printElement(Object a) {
+                Allocation theObject = (Allocation) a;
+                System.out.println(theObject.name + " start: " + theObject.start.cursor[0] + ", " + theObject.start.cursor[1] + " end: " + theObject.end.cursor[0] + ", " + theObject.end.cursor[1]);
+            }
+
+            public Allocation[] toArray(){
+                Allocation[] temp = new Allocation[end];
+                for(int i = 0; i < temp.length; i++)
+                    temp[i] = (Allocation) array[i];
+                return temp; 
+            }
+
+
+            public Allocation whereToAdd(String content){
+                StringList contentWords = null;
+                contentWords = contentWords.listAllWords(content); //content is parsed.
+                int length = contentWords.toArray().length;
+                
+                
+                
+                //FIND WHERE TO PLACE NEW FILE
+                
+                this.bubbleSort(false); //puts first allocations at top, last allocations at bottom. BUBBLESORT!
+                Allocation[] asArray = this.toArray();
+                for( int i = 0; i < asArray.length; i++ ){
+                    if( (asArray[i].end).distanceBetween(asArray[i+1].start) <= length ){ //if there is space for it in the pylon,
+                        
+                        Cursor starter = (asArray[i].start).copy();
+                        starter.next();
+                        
+                        Allocation theAllocation = new Allocation( starter, content );
+                        this.push( theAllocation );
+                        
+                        this.bubbleSort(false); //keeping it sorted. Just for kicks.
+                        return theAllocation;
+                    } 
+                }
+                
+                return null;
+            }
+        }
         
                 //      INTERACTION WITH DEFLECTORS
         

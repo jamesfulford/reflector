@@ -5,7 +5,6 @@ public class deflector {
 	public int width; //number of columns
 	public char[][] array = new char[width][height]; //(x, y) format for arrays
 //	public deflector parent = null; //the deflector being written on top of, if applicable.
-        language lang = null; //the language the deflector is encrypted in, if applicable.
         
 	
         
@@ -20,35 +19,15 @@ public class deflector {
 		
 	}
 	//prints out the entire deflector.
-	public void border(char a){
-		Cursor cursor = Cursor.at(x, y); //local cursor for doing the borders is built
-		while(cursor.inBounds(this)){
-                        this.write(cursor, a);
-                        cursor.right();
-		}
-		cursor.left();
-		while(cursor.inBounds(this)){
-			this.write(cursor, a);
-			cursor.down();
-		}
-		cursor.up();
-		while(cursor.inBounds(this)){
-			this.write(cursor, a);
-			cursor.left();
-		}
-		cursor.right();
-		while(cursor.inBounds(this)){
-			this.write(cursor, a);
-			cursor.up();
-		}
-                cursor.down();
-                this.array[x][y]=a; //for some reason, the top left corner as not been working. This is my fix.
-	}
+	
+        public void border(char a){
+            Cursor.border(a, this);
+        }
 	//lines the borders of a deflector with a character.
 	
 	
         
-				//		INITIALIZE	
+				//		INITIALIZATION METHODS	
 	
 	public static deflector initialize(int width, int height, int x, int y){
 		deflector dish = new deflector();
@@ -69,16 +48,7 @@ public class deflector {
         
         
                                 //              DEFLECTOR INTERACTIONS
-        
-	public static boolean bounce(deflector dish, deflector main){
-		//We want to find out if "dish" is entirely inside of "main".
-		if(main.x>dish.x) return false; //fails if the left side of main is right of dish.
-		if(main.x+main.width-1 < dish.x+dish.width-1) return false; //fails if right side of main is left of dish
-		if(main.y > dish.y)return false; //fails if top of main is below dish
-		if(main.y+main.height-1 < dish.y+dish.height-1) return false; //fails if bottom of main is above dish
-		return true; //succeeds if doesn't fail.
-	}
-	//Answers the question: is the first deflector inside the second deflector?	
+        	
 	public void impressTo(deflector dish){
             Cursor ptr = Cursor.at(this.x - 1, this.y);
             while(ptr.progress(this)){
@@ -87,15 +57,17 @@ public class deflector {
                 }
             }
 	}
-	//if given deflector has a parent, all information is sent downstream from deflector to it's parent deflector. It then forces the parent to do the same.
+	//this deflector's data steams into appropriate positions in dish.
 	public void compile(deflector[] dishes){
-		for(int i = 0; i<dishes.length; i++)
-			dishes[i].impressTo(this);
+            for (deflector dishe : dishes) {
+                dishe.impressTo(this);
+            }
 	}
-	//sends data in deflector arrays into this deflector.
+	//impressesTo data in deflector[] into this deflector. Deflectors later in the array overwrite earlier deflectors.
 	public void uplift(deflector[] dishes){
-		for(int i = 0; i<dishes.length; i++)
-			this.impressTo(dishes[i]);
+            for (deflector dishe : dishes) {
+                this.impressTo(dishe);
+            }
 	}
 	//sends data in this array into appropriate spots in deflector array.
 	public deflector copy(){

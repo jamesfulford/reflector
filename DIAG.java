@@ -1,7 +1,14 @@
 public class DIAG {
 	//just a collection of simple tools to use for diagnosing problems.
 	
-    
+        public static void ln(){
+            System.out.println();
+        }
+        public static void ln(int skip){
+            if(skip > 0)
+            for(int i = 0; i < skip; i++)
+                ln();
+        }
     
                 //      PING TOOLS
 	public static void ping(){
@@ -113,6 +120,17 @@ public class DIAG {
             System.out.println();
             for(int i = 0; i<longIsland.length; i++)
                 System.out.print(" " + longIsland[i] + " ");
+        }
+        
+        public static void val(Object word){
+            System.out.print((String)word);
+        }
+        public static void val(Object[] as){
+            
+            for(int i = 0; i < as.length; i++){
+                val((String) as[i] + ", ");
+            }
+            System.out.println();
         }
         
         public static long avg(long[] longIsland){

@@ -16,7 +16,18 @@ public class askFor {
     
     private static Scanner type = new Scanner(System.in);
     
+    public static void readKey(){
+        System.out.println("Hit enter to continue...");
+        String input = type.nextLine();
+    }
+    public static void silentReadKey(){
+        String input = type.nextLine();
+    }
+   
+    
                 //      Strings
+    
+    
     
     public static String aString(){
         try {

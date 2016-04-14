@@ -1,12 +1,27 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class program {
-    
+        static long timer;
+        
+        public static void start(String section){
+            System.out.println("            //      STARTING " + section + ".");
+            askFor.readKey();
+            System.out.println();
+            timer = System.currentTimeMillis(); //begin timing
+        }
+        
+        public static void end(String section){
+            long elapsedTime = System.currentTimeMillis() - timer;
+            System.out.println("            " + section + " COMPLETE.       \\\\");
+            System.out.println("Time Elapsed in milliseconds: " + elapsedTime);
+            askFor.readKey();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            
+        }
     
 	public static void main(String[] args) throws FileNotFoundException {
 		
@@ -14,61 +29,74 @@ public class program {
             
                     //      INITIALIZATION  
                     
-	partition reflector = partition.constructDefault(); //initializes a default partitition (as detailed in Data structures sessions)
-	reflector.pylon = pylon.construct(99); //this is my memory of 99 levels (see pylon class) being connected to my partition. The missing level is the master deflector of the partition.
-	reflector.pylon.blanketStatement(reflector.master);//fills the pylon with
+        start("PARTITION INITIALIZATION");  
         
-        
-        
-                    //      USER INTERFACING
-        
-        System.out.println("Initialization Complete");
-	System.out.println();
+	partition reflector = partition.constructDefault(pylon.construct(99)); //initializes a default partitition (as detailed in Data structures sessions)
+	
+        end("PARTITION INITIALIZATION");
         
         
         
                     //      PARSING FROM FILE
         
+        start("EXTRACT GREEN EGGS AND HAM");
+        
         File extractionPoint = new File ( "src/greenEggsAndHam.txt" );
-        language greenEggsAndHam = new language ( extractionPoint );
+        StringList greenEggsAndHam = new StringList();
+        greenEggsAndHam = greenEggsAndHam.extractToStringList( extractionPoint );
+        
+        end("EXTRACT GREEN EGGS AND HAM");
         
         
         
+                    //      SORTING
         
-                    //      HASHMAP CREATION
+//        start("SORTING");
+//                    
+//        greenEggsAndHam.bucketSort(false);
+//        greenEggsAndHam.print();
+//        
+//        end("SORTING");
         
-        language hashbrownAndEggs = greenEggsAndHam.hashMap();
+
+
+                    //      HASHING
+                    
+        start("HASHING");
         
-           
+        StringList hashbrown = (StringList) greenEggsAndHam.uniqueize();
+        IntegerList hashedEggsAndHam = greenEggsAndHam.hashToIntList(hashbrown);
+        hashedEggsAndHam.print();
         
-        System.out.println("Story Words: " + greenEggsAndHam.words.toArray().length);
-        System.out.println("Hashmap Words: " + hashbrownAndEggs.words.toArray().length);
-        greenEggsAndHam.print();
-        hashbrownAndEggs.print();
+        end("HASHING");
+        
+        
+        
+                    //      END OF PROGRAM
+                    
+        end("PROGRAM");
         
        
         
         
         
                     //      SOMETHING OLD, NEW, BORROWED, BLUE
-        
-        
                     
                     
         
                     //      SEARCHING TEST
         
-//        for(int i = 0; i<reflector.pylon.buffer.length; i++)
-//            reflector.pylon.buffer[i].array[0][0] = 1; //changes all indexes
+//        for(int i = 0; i<reflector.spire.buffer.length; i++)
+//            reflector.spire.buffer[i].array[0][0] = 1; //changes all indexes
 //        
-//        reflector.pylon.buffer[99].array[79][24] = '#'; //at the very end
+//        reflector.spire.buffer[99].array[79][24] = '#'; //at the very end
 //        
 //            long startSeq = System.currentTimeMillis(); //begin timing
-//            reflector.pylon.sequentialSearch('#');
+//            reflector.spire.sequentialSearch('#');
 //            System.out.println(System.currentTimeMillis() - startSeq + "ms by sequential search,"); //end timing
 ////        
 ////            long startInd = System.currentTimeMillis(); //begin timing
-////            reflector.pylon.indexSearch('#');
+////            reflector.spire.indexSearch('#');
 ////            System.out.println(System.currentTimeMillis() - startInd + "ms by index search,"); //end timing
 ////        
         
